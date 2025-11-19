@@ -1,0 +1,23 @@
+Question 1
+1. Select DISTINCT(salary) from emp order by salary desc limit 1,offset 1;
+2. Select salary from emp order by salary desc offset 1, limit 1;
+
+Question 2
+select country from city inner join games on city.name=games.city;
+
+@uestion 3
+Left join
+For the left join, the table of most consideration is the left table, the table that is mention after the FROM word.
+All the entry for this table are return. While this table is used to do the matching, when matching second table
+ if there is no match the row after Left join clause is return null.
+
+ Select games.yr,games.city,city.name,city.country from city left join games on city.name=games.city;
+
+ Right Join
+ The table after the Right Join keyword is the right table. All value in the right table will be return,
+  and any matching that was not found on the other table will be return null.
+
+  Select games.yr,games.city,city.name,city.country from city Right Join games on city.name=games.city;
+
+@uestion 4
+Select userId, AVG(duration)As AverageDuration from sessions group by userId having count(*)>1;
