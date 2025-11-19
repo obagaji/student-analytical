@@ -18,9 +18,7 @@ public class Subjects {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String subjectName;
-    private long studentId;
+    private String studentName;
     @Embedded
     @Max(value = 100)
     @Min(value = 0)
