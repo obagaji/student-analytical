@@ -32,6 +32,8 @@
 		<module>student-eureka</module>
 		<module>student-info</module>
 		<module>student-subjects</module>
+		<module>Date-Conversion</module>
+		<module>student-analytical</module>
 	</modules>
 <!--	<properties>
 		<java.version>21</java.version>

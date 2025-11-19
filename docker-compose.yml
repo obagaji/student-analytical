@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Service
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Margrete@1
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Zookeeper Service
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  # Kafka Service
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  # Zipkin Service
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+
+  # Microservice 1
+  microservice1:
+    build: ./student-eureka # Path to microservice directory containing Dockerfile
+    container_name: student-eureka
+    volumes:
+      - student-data:/data
+    networks:
+      - backend
+  #  environment:
+    # SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/your_database_name
+    # SPRING_DATASOURCE_USERNAME: your_username
+    # SPRING_DATASOURCE_PASSWORD: your_password
+    # SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    # SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+    #depends_on:
+      #  - postgres
+      #  - kafka
+    #  - zipkin
+    ports:
+      - "8761:8761" # Map host port 8761 to container port 8761
+
+  # Microservice 3
+  microservice3:
+    build: ./student-info
+    container_name: student-info
+    volumes:
+      - student-info-data:/data
+    networks:
+      - backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/student
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Margrete@1
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+    depends_on:
+      - postgres
+      - student-eureka
+      - kafka
+      - zipkin
+    ports:
+      - "8779:8779"
+
+  # ... (Repeat for microservice4)
+  microservice4:
+    build: ./student-subjects
+    container_name: student-subjects
+    volumes:
+      - student-subjects-data:/data
+    networks:
+      - backend
+    environment:
+         SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/subject
+         SPRING_DATASOURCE_USERNAME: your_username
+         SPRING_DATASOURCE_PASSWORD: your_password
+         SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+         SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+    depends_on:
+      - student-eureka
+      - postgres
+      - kafka
+      - zipkin
+    ports:
+      - "8780:8780"
+volumes:
+  postgres_data:

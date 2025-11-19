@@ -7,6 +7,7 @@
     <groupId>org.DateConversion</groupId>
     <artifactId>Date-Conversion</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Date-Conversion</name>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
