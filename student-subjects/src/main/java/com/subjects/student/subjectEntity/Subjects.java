@@ -1,9 +1,10 @@
 package com.subjects.student.subjectEntity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -20,6 +21,8 @@ public class Subjects {
 
     private String subjectName;
     private long studentId;
-    @S
-    private double studentSubjectScore;
+    @Embedded
+    @Max(value = 100)
+    @Min(value = 0)
+    private StudentScores studentSubjectScore;
 }

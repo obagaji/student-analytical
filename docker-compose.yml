@@ -78,6 +78,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: Margrete@1
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+      STUDENT_EUREKA_URL: http://student-eureka:8761
     depends_on:
       - postgres
       - student-eureka
@@ -100,6 +101,7 @@ services:
          SPRING_DATASOURCE_PASSWORD: your_password
          SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
          SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+         STUDENT_EUREKA_URL: http://student-eureka:8761
     depends_on:
       - student-eureka
       - postgres
