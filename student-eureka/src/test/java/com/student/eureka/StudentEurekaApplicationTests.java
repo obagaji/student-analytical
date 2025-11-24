@@ -10,4 +10,6 @@ class StudentEurekaApplicationTests {
 	void contextLoads() {
 	}
 
+
+
 }

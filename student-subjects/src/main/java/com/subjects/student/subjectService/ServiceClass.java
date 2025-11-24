@@ -15,16 +15,18 @@ public class ServiceClass //implements ScoreCalculation
 {
     @Autowired
     private StudentRepo repo;
-    public Subjects getStudentScoreWithName(String name)  {
+
+    public Subjects getStudentScoreWithName(String name) {
         return repo.findByStudentName(name).orElseThrow(SCoreNotFoundException::new);
     }
-    public List<Double> getScoreWithName(String name)  {
+
+    public List<Double> getScoreWithName(String name) {
         Subjects stud = new Subjects();
         stud = repo.findByStudentName(name).orElseThrow(SCoreNotFoundException::new);
-      return   getDoubleValue(stud);
+        return getDoubleValue(stud);
     }
-    private List<Double> getDoubleValue(Subjects subjects)
-    {
+
+    private List<Double> getDoubleValue(Subjects subjects) {
         List<Double> listValue = new ArrayList<>();
         listValue.add(subjects.getStudentSubjectScore().firstScore());
         listValue.add(subjects.getStudentSubjectScore().secondScore());
@@ -33,9 +35,12 @@ public class ServiceClass //implements ScoreCalculation
         listValue.add(subjects.getStudentSubjectScore().fifthScore());
         return listValue;
     }
-    public Subjects addNewSubjectScore(Subjects value)
-    {
+
+    public Subjects addNewSubjectScore(Subjects value) {
         return repo.save(value);
     }
 
+    public List<Subjects> findAllScores() {
+        return repo.findAll();
+    }
 }
