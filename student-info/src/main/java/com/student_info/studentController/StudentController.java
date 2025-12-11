@@ -2,6 +2,8 @@ package com.student_info.studentController;
 
 import com.student_info.studentEntiry.StudentEntity;
 import com.student_info.studentService.ServiceImpl;
+import com.student_info.studentService.StudentNameId;
+import com.student_info.studentService.StudentSubjectImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,6 +28,8 @@ public class StudentController {
 
     @Autowired
     private ServiceImpl impl;
+    @Autowired
+    private StudentSubjectImp subjectImp;
 
     @Operation(summary = "Get Student with the id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200",description = "Student Found",
@@ -36,6 +40,15 @@ public class StudentController {
     public ResponseEntity<StudentEntity>getStudentById(@PathVariable("id")Long id)
     {
         StudentEntity student = impl.getStudentWithId(id);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(uri);
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_JSON).body(student);
+    }
+    @GetMapping("/student/{id}")
+    public ResponseEntity<StudentNameId>getStudentForScore(@PathVariable("id")Long id)
+    {
+        StudentNameId student = subjectImp.getStudentName(id);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri();
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(uri);

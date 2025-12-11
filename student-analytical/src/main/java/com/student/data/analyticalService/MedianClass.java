@@ -1,7 +1,9 @@
 package com.student.data.analyticalService;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+@Component
 public  class MedianClass implements ScoreCalculation {
     @Override
     public double CalculateValue(List<Double> doubleValue) {

@@ -1,7 +1,9 @@
 package com.student.data.analyticalService;
 
 import jakarta.annotation.Nullable;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Subjects {
 
         private Long id;

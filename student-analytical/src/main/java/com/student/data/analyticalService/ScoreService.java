@@ -9,13 +9,15 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class ScoreService {
 
     private List<Double> cal = new ArrayList<>();
-    @Autowired
-    private CalculateClass calculateClass;
+   /* @Autowired
+    private CalculateClass calculateClass;*/
     @Autowired
     private AnalyseRepo analyseRepo;
     @Autowired
@@ -29,7 +31,7 @@ public class ScoreService {
     }
 
     @KafkaListener(topics = "subjects-score", groupId = "subject-score")
-    public void consume(Subjects subject) {
+    public void consume(Subjects subject)  {
         recieveSubject = subject;
         List<Double> getDouble = new ArrayList<>();
         this.name = recieveSubject.getStudentName();
@@ -41,7 +43,8 @@ public class ScoreService {
         getDouble.add(studentScores.fourth());
         getDouble.add(studentScores.fifth());
         setCal(getDouble);
-        saveCalculation();
+     //   saveCalculation();
+        getCalculation().join();
 
     }
 
@@ -52,30 +55,45 @@ public class ScoreService {
     public List<Double> getCal() {
         return cal;
     }
+    public CompletableFuture<Void>getCalculation()
+    {
+        return CompletableFuture.runAsync(this::saveCalculation);
+    }
 
     private void saveCalculation() {
         ScoreEntity scoreEntity = new ScoreEntity();
-        scoreEntity.setMean(CalMean());
-        scoreEntity.setMedian(CalMedian());
-        scoreEntity.setModel(CalModel());
+        scoreEntity.setMean(calculatedValue(new CalculateMean()));
+        scoreEntity.setMedian(calculatedValue(new CalculateMedian()));
+        scoreEntity.setModel(calculatedValue(new CalculateModel()));
         scoreEntity.setName(name);
         scoreEntity.setCalculationId(scoreStudentId);
         analyseRepo.save(scoreEntity);
     }
 
-    private Double CalMean() {
-        calculateClass = new CalculateMean();
+/*    private Double CalMean() {
+      CalculateClass  calculateClass = new CalculateMean();
         return calculateClass.scoreCalculation().CalculateValue(getCal());
     }
 
     private Double CalModel() {
-        calculateClass = new CalculateModel();
+      CalculateClass  calculateClass = new CalculateModel();
         return calculateClass.scoreCalculation().CalculateValue(getCal());
     }
 
     private Double CalMedian() {
-        calculateClass = new CalculateMedian();
+      CalculateClass  calculateClass = new CalculateMedian();
         return calculateClass.scoreCalculation().CalculateValue(getCal());
+    }*/
+    private Double calculatedValue(CalculateClass calculateClass)
+    {
+
+        return switch (calculateClass)
+        {
+            case CalculateModel calculateModel-> calculateClass.scoreCalculation().CalculateValue(getCal());
+            case CalculateMedian calculateMedian-> calculateClass.scoreCalculation().CalculateValue(getCal());
+            case CalculateMean calculateMean-> calculateClass.scoreCalculation().CalculateValue(getCal());
+            default -> 0.0;
+        };
     }
 
     public Double findMean(String name) {

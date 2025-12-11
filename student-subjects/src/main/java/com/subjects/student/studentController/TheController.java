@@ -1,7 +1,10 @@
 package com.subjects.student.studentController;
 
 
+import com.subjects.student.subjectEntity.StudentScores;
 import com.subjects.student.subjectEntity.Subjects;
+/*import com.subjects.student.subjectService.ServiceClass;
+import com.subjects.student.subjectService.SubjectKafkaProducer;*/
 import com.subjects.student.subjectService.ServiceClass;
 import com.subjects.student.subjectService.SubjectKafkaProducer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +38,20 @@ public class TheController {
     public ResponseEntity<Subjects>addingScore(@RequestBody Subjects score)
     {
         Subjects addSubjectScore = classService.addNewSubjectScore(score);
+        subjectKafkaProducer.sendScores("subjects-sore",addSubjectScore);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().build(addSubjectScore);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(uri);
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_JSON).build();
+    }
+    @PostMapping("/subject/score")
+    @Operation(summary="Enter the scores for each subjects")
+    @ApiResponses(value={@ApiResponse(responseCode = "201",description = "Created",content
+            = {@Content(mediaType = "application/json", schema = @Schema(implementation = Subjects.class ))})
+            ,@ApiResponse(responseCode = "400",description = "NOT SUCCESSFUL",content = @Content)})
+    public ResponseEntity<Subjects>addingScoreFromSubject(@RequestBody StudentScores score, @PathVariable("id")Long id)
+    {
+        Subjects addSubjectScore = classService.createSubject(score, id);
         subjectKafkaProducer.sendScores("subjects-sore",addSubjectScore);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().build(addSubjectScore);
         HttpHeaders headers = new HttpHeaders();

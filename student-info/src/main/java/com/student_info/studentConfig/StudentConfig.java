@@ -11,6 +11,7 @@ public class StudentConfig
     public RestClient restClient()
     {
         return RestClient.builder()
+                .baseUrl("http://localhost:8780")
                 .build();
     }
 }

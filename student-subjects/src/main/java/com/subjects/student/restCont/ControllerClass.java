@@ -1,3 +1,4 @@
+/*
 package com.subjects.student.restCont;
 
 import com.subjects.student.subjectEntity.Subjects;
@@ -76,3 +77,4 @@ public class ControllerClass {
     }
 
 }
+*/

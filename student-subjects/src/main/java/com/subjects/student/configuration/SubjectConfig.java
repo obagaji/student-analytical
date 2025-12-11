@@ -10,7 +10,9 @@ import org.springframework.web.client.RestClient;
 public class SubjectConfig {
     @Bean
     public RestClient restClient() {
-        return RestClient.builder().build();
+        return RestClient.builder()
+                .baseUrl("http://localhost:8781")
+                .build();
 
     }
     @Bean

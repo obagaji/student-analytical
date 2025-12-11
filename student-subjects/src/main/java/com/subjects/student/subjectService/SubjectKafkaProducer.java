@@ -1,6 +1,5 @@
 package com.subjects.student.subjectService;
 
-import com.subjects.student.subjectEntity.StudentScores;
 import com.subjects.student.subjectEntity.Subjects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -10,14 +9,11 @@ import org.springframework.stereotype.Service;
 public class SubjectKafkaProducer {
 
     @Autowired
-    private ScoreCalculation scoreCalculation;
-    @Autowired
-    private KafkaTemplate<String, Subjects> kafkaTemplate;
+    KafkaTemplate<String, Subjects> kafkaTemplate;
 
-    public void sendScores(String value, Subjects recordValue)
+    public void sendScores(String key,Subjects subject)
     {
-        kafkaTemplate.send(value,recordValue);
+        kafkaTemplate.send(key,subject);
     }
-
 
 }
