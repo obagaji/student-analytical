@@ -6,6 +6,8 @@ import com.student_info.studentException.NoStudentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StudentSubjectImp  implements StudentSubject {
 
@@ -20,5 +22,12 @@ public class StudentSubjectImp  implements StudentSubject {
         StudentEntity student = studentRepository.findById(id).orElseThrow();
         return new StudentNameId(student.getStudentName(), student.getStudentId());
     }
+    public StudentEntity saveStudent(StudentEntity entity)
+    {
+      return   studentRepository.save(entity);
+    }
 
+    public List<StudentEntity> allSaveStudent() {
+        return studentRepository.findAll();
+    }
 }

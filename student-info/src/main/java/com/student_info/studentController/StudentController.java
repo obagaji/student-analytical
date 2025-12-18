@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/student")
@@ -53,5 +54,10 @@ public class StudentController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(uri);
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_JSON).body(student);
+    }
+    @GetMapping("/student/all")
+    public ResponseEntity<List<StudentEntity>>getAllStudent()
+    {
+        return ResponseEntity.ok(subjectImp.allSaveStudent());
     }
 }

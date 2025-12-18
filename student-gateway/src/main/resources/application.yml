@@ -15,21 +15,21 @@ eureka:
     baseUrl: http://localhost:9411/
   cloud:
     gateway:
-      server:
-        webflux:
-          routes:
-            - id: student-info
-              uri: lb://student-info
-              predicates:
-                - Path=/api/student/**
-            - id: student-subjects
-              predicates:
-                - Path=/api/subject/**
-              uri: lb://student-subjects
-            - id: student-analytical
-              predicates:
-                - Path=/api/calculate/**
-
+    #  server:
+      #  webflux:
+      routes:
+        - id: student-info
+          uri: lb://student-info
+          predicates:
+            - Path=/api/student/**
+        - id: student-subjects
+          predicates:
+            - Path=/api/subject/**
+          uri: lb://student-subjects
+        - id: student-analytical
+          predicates:
+            - Path=/api/calculate/**
+          uri: lb://student-analytical
 
 
 
